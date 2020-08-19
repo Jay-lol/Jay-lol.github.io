@@ -1,21 +1,23 @@
 ---
-date: 2020-04-14 14:08:47
+date: {}
 layout: post
-title: "Tablayout에서 Tab클릭이 안되는 오류"
-subtitle:
-description:
-image: https://res.cloudinary.com/dm7h7e8xj/image/upload/c_scale,w_380/v1559820489/js-code_n83m7a.jpg
-optimized_image: 
+title: Tablayout에서 Tab클릭이 안되는 오류
+subtitle: null
+description: null
+image: >-
+  https://res.cloudinary.com/dm7h7e8xj/image/upload/c_scale,w_380/v1559820489/js-code_n83m7a.jpg
+optimized_image: null
 category: android
 tags: Android Kotlin
-author:
+author: null
 paginate: false
+published: true
 ---
 
 기상시간 앱을 만드는데 Tablayout으로 상단에 탭을 만들어서 사용하려했는데 이게 슬라이드로는 프레그먼트전환이 잘 일어나지만 버튼 클릭으로는 전환이 이루어지지 않아서 해결해 보았다.
 
 ![링크](..\assets\img\Android\2020-04-14-23-12-01.png)
-(출처: <https://stackoverflow.com/questions/34959298/android-material-design-click-event-on-tabs>)
+<br>(출처: <https://stackoverflow.com/questions/34959298/android-material-design-click-event-on-tabs>)
 
 웹서핑을 해보니까 비슷한 사례가 많이 나왔다. 그 해결방법은 대략 3가지 정도가 있는거같다.
 
@@ -74,5 +76,3 @@ tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 ```
 
 이를 통해 높이를 강제로 할당한 경우에 에뮬레이터에서는 정상동작 하지만, 기기별로 높이가 다르기 때문에 제대로 동작되지 않는 기기도 있어서 안좋은 설정방법임을 깨달았다.
-
-
