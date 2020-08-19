@@ -1,10 +1,13 @@
 ---
 layout: post
 title: Git 공부내용 정리!
-date: 2020-08-19 01:00:00 +0000
-description: 
-img: git.png # Add image post (optional)
-tags: [Git, Github] # add tag
+date: '2020-08-19 01:00:00 +0000'
+description: null
+img: git.png
+tags:
+  - Git
+  - Github
+published: true
 ---
 # Git 정리!!
 주의) 이 글은 의식의 흐름대로 적은 글이라, 가독성이 떨어집니다.
@@ -91,20 +94,20 @@ git push origin develop
 
 로컬pc와 remote=깃허브 에 각각 master와 develop가 생성된것을 확인할 수 있다.
 
-![I and My friends]({{site.baseurl}}/assets/img/git/remote.png)
+![I and My friends]({{site.baseurl}}/assets/img/git/remote.PNG)
 
 
 
 깃 log 내용을 보면 다음과같다.
 
-![I and My friends]({{site.baseurl}}/assets/img/git/tree.png)
+![I and My friends]({{site.baseurl}}/assets/img/git/tree.PNG)
 
 깃허브 master 브랜치다. src, apk, readme파일만 올라갔다.
-![I and My friends]({{site.baseurl}}/assets/img/git/f.png)
-![I and My friends]({{site.baseurl}}/assets/img/git/f2.png)
+![I and My friends]({{site.baseurl}}/assets/img/git/f.PNG)
+![I and My friends]({{site.baseurl}}/assets/img/git/f2.PNG)
 
 깃허브 develop 브랜치다. 디비키를 제외한 빌드에 필요한 모든 파일들이  올라갔다.
-![I and My friends]({{site.baseurl}}/assets/img/git/gg.png)
+![I and My friends]({{site.baseurl}}/assets/img/git/gg.PNG)
 
 
 깃린이로써 고생했다.
