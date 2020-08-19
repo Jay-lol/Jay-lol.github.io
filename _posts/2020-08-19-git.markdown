@@ -1,0 +1,110 @@
+---
+layout: post
+title: Git 공부내용 정리!
+date: 2020-08-19 01:00:00 +0000
+description: 
+img: git.png # Add image post (optional)
+tags: [Git, Github] # add tag
+---
+# Git 정리!!
+주의) 이 글은 의식의 흐름대로 적은 글이라, 가독성이 떨어집니다.
+
+
+최근에 BayTalk이라는 간단한 채팅어플을 만들었다. 그리고 깃에 대해 공부를 하던 중에 브랜치에 관한 글을 보고 마스터 브랜치와 작업브랜치를 나눠서 개발을 한다는 것에 흥미가 생겨서 삽질을 해보았다..  
+<https://rumblefish.tistory.com/65>
+<br>
+내가 깃허브에 올리고자하는 구조는 다음과 같다.
+1. master 브랜치에는 소스코드, README파일, apk만 올라간다 
+2. develop 브랜치에는 데이터베이스 키를 제외한 빌드의 필요한 모든 파일들이 올라간다.
+
+
+
+<details>
+    <summary><b>깃 삽질한 이유..</b></summary>
+
+
+로컬PC기준에서
+.gitignore에 디비키를 제외를 하고 새로운 브랜치를 만들었다.<br>
+생각대로라면 새로운 브랜치에는 디비키가 없어야 하는데 실제로는 그대로 있는 것이다.<br>
+그래서 아무생각없이 삭제를 했다.<br>
+그리고 마스터 브랜치로 가보니까 디비키가 사라졌다!<br>
+이 사건으로 인해 깃에 대해 더 공부를 하게 된거같다.
+<br>
+그 전에는 git add . 나 git commit을 마구마구 남발하며 깃을 써왔다.<br>
+하지만 이날 삽질을 많이해서 이제는 이해를 했다.<br>
+나만의 방식으로 정리하자면..<br>
+우선 git add 는 파일들을 깃에 담는다,트랙한다, 깃 위에 올린다 등등 으로 해석할 수 있다.<br>
+git commit 은 add로 올려진 파일들을 하나의 캡슐로 만든다는 것이다.<br>
+<br>
+이를 토대로 위 사건을 해석했다.<br>
+.gitignore에 있는 파일은 git add 로 트랙이 되지않는다.<br>
+즉 git이라는 캡슐안에 넣지 못하는것이다.<br>
+여기서 나는 디비키를 넣었기 때문에 이 디비키는 로컬PC에만 존재하는것이고 git 캡슐에 담겨있지 않았던 내용이다.
+<br>
+그래서 새로운 브랜치로 가도 키 파일은 보이는게 당연하고 키 파일은 새로운 브랜치에 속한것도 아니다. <br>이 어느 git캡슐에도 속하지 않은 파일을 삭제했으니.. 그냥 사라진것이다.
+<br>
+그럼 별개로 만약 마스터 브랜치에는 1.txt가 있는데 새로운 브랜치에서는 이를 삭제하고 싶다면 어떻게 할까?
+<br>
+마스터 브랜치에서 add . 로 현재폴더의 모든 내용을 캡슐에 넣고 commit으로 캡슐을 봉인한다. <br>그후 새로운 브랜치를 만들고 보면 1.txt가 있을것이다. 이때 이를 삭제하고 바로 마스터 브랜치로 가면 에러가 난다.<br>
+
+1.txt를 삭제하고 commit으로 브랜치를 꼭 캡슐 봉인한뒤 보면<br>
+master에는 1.txt가 있고 새로운 브랜치에는 없는것을 확인할 수 있다
+</details>
+
+
+
+<br>
+처음에는 단순하게 master 브랜치에서 3가지의 파일만 push를 하려고 했는데  
+이미 git add . 로  트랙을 전부해버려서 그게 쉽지 않았다.
+
+그래서 찾아보니까 특정 파일만 merge하는 기능으로 구현할 수 있을거 같아서 시도했다.
+
+```git
+git init // 로컬에 git을 만든다
+git remote add origin  <주소> //  orgin이라는 원격저장소를 추가(연결) 
+git add README.md // 초기 프로젝트에 설명이 담긴 리드미..
+git commit -m "BayTalk"
+git push origin master
+
+git branch develop 
+git checkout develop  // develop 브랜치 생성후, 브랜치 이동
+.gitignore 수정후
+git add .       // 로 모든 파일을 캡슐에 넣는다. .gitignore에 등록되면 안담긴다. apk파일과 디비키를 적어놔서 로컬pc에만 존재하게 했다.
+git commit -m "initial commit -dv" // 모든파일을 캡슐 봉인한다.
+git push origin develop // origin원격저장소에 develop브랜치에 푸쉬
+
+git checkout master  // master 브랜치에는 readme말고 없을 것이다.
+git checkout develop -- app/src //develop로 src폴더만 가져온다
+git add -f app/*.apk   // apk파일도 강제로 캡슐에 담는다.
+git commit -m "BayTalk v.1.0" // 기존 리드미에 2개파일이 추가로 봉인된다.
+git push origin master // origin원격저장소에 master브랜치에 푸쉬한다. 그러면 깃허브상 master브랜치에서는 3가지의 파일만 보인다
+
+git checkout develop
+// 이제 여기서 작업을 하면된다.  master 브랜치는 어차피 src폴더 내용만 가져오니까 그것만 merge시키면된다.
+git add . // 수정후에 add한다
+git commit -m "Nice Git"
+git push origin develop
+
+나중에 master 브랜치 버전을 올릴때 다시 3가지파일만 add 한뒤 commit,push하면 된다
+```
+<br>
+
+로컬pc와 remote=깃허브 에 각각 master와 develop가 생성된것을 확인할 수 있다.
+
+![I and My friends]({{site.baseurl}}/assets/img/git/remote.png)
+
+
+
+깃 log 내용을 보면 다음과같다.
+
+![I and My friends]({{site.baseurl}}/assets/img/git/tree.png)
+
+깃허브 master 브랜치다. src, apk, readme파일만 올라갔다.
+![I and My friends]({{site.baseurl}}/assets/img/git/f.png)
+![I and My friends]({{site.baseurl}}/assets/img/git/f2.png)
+
+깃허브 develop 브랜치다. 디비키를 제외한 빌드에 필요한 모든 파일들이  올라갔다.
+![I and My friends]({{site.baseurl}}/assets/img/git/gg.png)
+
+
+깃린이로써 고생했다.
