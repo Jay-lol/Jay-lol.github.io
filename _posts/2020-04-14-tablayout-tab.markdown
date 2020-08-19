@@ -17,7 +17,9 @@ published: true
 기상시간 앱을 만드는데 Tablayout으로 상단에 탭을 만들어서 사용하려했는데 이게 슬라이드로는 프레그먼트전환이 잘 일어나지만 버튼 클릭으로는 전환이 이루어지지 않아서 해결해 보았다.
 
 ![링크](..\assets\img\Android\2020-04-14-23-12-01.png)
-<br>(출처: <https://stackoverflow.com/questions/34959298/android-material-design-click-event-on-tabs>)
+<br>
+
+(출처: <https://stackoverflow.com/questions/34959298/android-material-design-click-event-on-tabs>)
 
 웹서핑을 해보니까 비슷한 사례가 많이 나왔다. 그 해결방법은 대략 3가지 정도가 있는거같다.
 
