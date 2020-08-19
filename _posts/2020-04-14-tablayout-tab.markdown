@@ -1,5 +1,5 @@
 ---
-date: {}
+date: 2020-04-14T14:08:47.000Z
 layout: post
 title: Tablayout에서 Tab클릭이 안되는 오류
 subtitle: null
