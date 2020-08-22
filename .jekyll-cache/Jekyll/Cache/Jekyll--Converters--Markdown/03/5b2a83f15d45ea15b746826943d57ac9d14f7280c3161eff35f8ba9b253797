@@ -1,0 +1,72 @@
+I"�<h3 id="사진관리-어플1---소켓-통신">사진관리 어플(1) - 소켓 통신</h3>
+
+<p>“코틀린 이것만 보면돼” 라는 책에 있는 사진관리 어플을 만들어 보려고한다.</p>
+
+<p>여기서 소켓통신을 사용하는데 소켓통신의 흐름은 다음 사진과 같다.</p>
+
+<p><img src="..\assets\img\Android\2020-04-03-10-10-38.png" alt="소켓통신" /></p>
+
+<p>앱 개발 초기단계에 클라이언트와 서버가 서로 IP를 주고받는 부분이 있다.
+이때 문제가 생겼었다.
+서버측에서 리슨을 하고, 클라이언트는 연결요청을해서 서버소켓과 클라이언트 소켓이 연결은 되는데, 그 반대의 경우가 되지 않는 것이였다.</p>
+
+<p>에러가 나는 부분 부터 —- 로 표시</p>
+
+<h4 id="servermainkt">ServerMain.kt</h4>
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">serverSocket</span> <span class="p">=</span> <span class="nc">ServerSocket</span><span class="p">(</span><span class="mi">9000</span><span class="p">)</span>
+<span class="nf">println</span><span class="p">(</span><span class="s">"서버가 시작되었습니다."</span><span class="p">)</span>
+<span class="n">serverLayout</span><span class="p">.</span><span class="n">mConnectInfo</span><span class="p">.</span><span class="n">text</span> <span class="p">=</span> <span class="s">"연결 대기중...."</span>
+<span class="n">socket</span> <span class="p">=</span> <span class="n">serverSocket</span><span class="p">.</span><span class="nf">accept</span><span class="p">()</span>
+<span class="nf">println</span><span class="p">(</span><span class="s">"클라이언트와 연결 완료(서버가 리슨)"</span><span class="p">)</span>
+<span class="n">dis</span> <span class="p">=</span> <span class="nc">DataInputStream</span><span class="p">(</span><span class="n">socket</span><span class="p">.</span><span class="nf">getInputStream</span><span class="p">())</span>
+
+<span class="kd">var</span> <span class="py">clientIp</span><span class="p">:</span> <span class="nc">String</span><span class="p">?</span> <span class="p">=</span> <span class="k">null</span>
+<span class="n">clientIp</span> <span class="p">=</span> <span class="n">dis</span><span class="p">.</span><span class="nf">readUTF</span><span class="p">()</span>
+
+<span class="nf">println</span><span class="p">(</span><span class="s">"ClientIP $clientIp receive!"</span><span class="p">)</span>
+<span class="n">socket</span><span class="p">.</span><span class="nf">close</span><span class="p">()</span>
+<span class="n">dis</span><span class="p">.</span><span class="nf">close</span><span class="p">()</span>
+<span class="n">serverSocket</span><span class="p">.</span><span class="nf">close</span><span class="p">()</span>
+<span class="p">--------------------------------------</span>
+<span class="n">socket</span> <span class="p">=</span> <span class="nc">Socket</span><span class="p">(</span><span class="s">"$clientIp"</span><span class="p">,</span> <span class="mi">1256</span><span class="p">)</span>  <span class="c1">// 여기에서 타임 아웃에러가 발생..</span>
+
+</code></pre></div></div>
+<blockquote>
+  <p>처음 서버가 시작되고 accept를 해서 clientIp를 받아 오는거 까지는 잘 실행 되었다. 하지만 그 반대로 서버 쪽에서 cilentIp로 연결을 시도하니까 에러가 난다.</p>
+</blockquote>
+
+<h4 id="clientkt">Client.kt</h4>
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">socketAddress</span> <span class="p">=</span> <span class="nc">InetSocketAddress</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="mi">9000</span><span class="p">)</span> <span class="c1">// hostname은 로컬 serverIp로 10.0.2.2</span>
+<span class="nc">Log</span><span class="p">.</span><span class="nf">d</span><span class="p">(</span><span class="nc">Tag</span><span class="p">,</span> <span class="n">hostname</span> <span class="p">+</span> <span class="s">" : 서버 연결 시도..."</span><span class="p">)</span>
+<span class="n">connectSock</span> <span class="p">=</span> <span class="nc">Socket</span><span class="p">()</span>
+<span class="n">connectSock</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">socketAddress</span><span class="p">,</span> <span class="n">mTimeout</span><span class="p">)</span>
+<span class="c1">//연결 완료</span>
+<span class="n">serverDos</span> <span class="p">=</span> <span class="nc">DataOutputStream</span><span class="p">(</span><span class="n">connectSock</span><span class="p">.</span><span class="nf">getOutputStream</span><span class="p">())</span>
+<span class="n">serverDos</span><span class="p">.</span><span class="nf">writeUTF</span><span class="p">(</span><span class="n">mIpAddress</span><span class="p">)</span> <span class="c1">// clientIp전송</span>
+
+<span class="n">serverDos</span><span class="p">.</span><span class="nf">flush</span><span class="p">()</span>
+<span class="n">connectSock</span><span class="p">.</span><span class="nf">close</span><span class="p">()</span>
+<span class="p">--------------------------------------------</span>
+<span class="c1">//리스너  소켓 생성 후 대기</span>
+<span class="n">serverSocket</span> <span class="p">=</span> <span class="nc">ServerSocket</span><span class="p">(</span><span class="mi">1256</span><span class="p">)</span>
+<span class="c1">//연결되면 수신용 소켓 생성</span>
+<span class="n">receiveSocket</span> <span class="p">=</span> <span class="n">serverSocket</span><span class="p">.</span><span class="nf">accept</span><span class="p">()</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>클라이언트쪽에서는 리슨을 계속 하는데 요청이 안들어온다고 판단해서 계속 리슨하는 상태이고, 서버는 충분한 시간동안 요청을 보내다 타임아웃이 되어서 에러가 발생한다.</p>
+</blockquote>
+
+<p>어떤 이유에서 이런일이 발생했는지 4일동안 삽질을 했지만 결국 알아내지 못했다. 확실한것은 client는 AVD에서 돌아가기 때문에 AVD에서  로컬서버로 보내는것은 되지만, 로컬서버에서 AVD로 보내는것은 안된다는 것이다.</p>
+
+<p>결국 나는 중간에 소켓을 닫는 부분(close())을 삭제하고 원래 9000번으로 연결되어있던 소켓을 유지시켜 나머지 작업도 처리하였다.</p>
+
+<p>물론 이건 실시간 프로그램은 아니다보니 소켓을 계속 유지 시켜야할 이유가 없어서 close를 하는게 맞지만, 단순히 ip를 주고받는 부분은 close를 안해도 될거같다고 생각해서 이렇게 처리하였다.</p>
+
+<p>지금은 이렇게 넘어가지만 이 부분은 개발을 해 나가면서 꼭 해결해보겠다.</p>
+
+<p><br /></p>
+
+<h4 id="참조-httpsrecipes4devtistorycom153">참조: <a href="https://recipes4dev.tistory.com/153" target="_blank">https://recipes4dev.tistory.com/153</a></h4>
+
+:ET

@@ -1,0 +1,69 @@
+I"r<p>기상시간 앱을 만드는데 Tablayout으로 상단에 탭을 만들어서 사용하려했는데 이게 슬라이드로는 프레그먼트전환이 잘 일어나지만 버튼 클릭으로는 전환이 이루어지지 않아서 해결해 보았다.</p>
+<center>
+![링크](..\assets\img\Android\2020-04-14-23-12-01.png)
+</center>
+<p><br /></p>
+
+<p>(출처: <a href="https://stackoverflow.com/questions/34959298/android-material-design-click-event-on-tabs" target="_blank">stackoverflow</a>)</p>
+
+<p>웹서핑을 해보니까 비슷한 사례가 많이 나왔다. 그 해결방법은 대략 3가지 정도가 있는거같다.</p>
+
+<blockquote>
+  <p>1.해당 부분이 뒤쪽으로 위치해 있을 수 있으므로 bringtoFront를 사용하여 Tablayout을 맨앞으로 가져온다.</p>
+</blockquote>
+
+<blockquote>
+  <p>2.다음 함수를 오버라이드로 추가한다</p>
+</blockquote>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tabLayout</span><span class="o">.</span><span class="na">setOnTabSelectedListener</span><span class="o">(</span><span class="k">new</span> <span class="nc">TabLayout</span><span class="o">.</span><span class="na">OnTabSelectedListener</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onTabSelected</span><span class="o">(</span><span class="nc">TabLayout</span><span class="o">.</span><span class="na">Tab</span> <span class="n">tab</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">viewPager</span><span class="o">.</span><span class="na">setCurrentItem</span><span class="o">(</span><span class="n">tab</span><span class="o">.</span><span class="na">getPosition</span><span class="o">());</span>
+    <span class="o">}</span>
+
+<span class="o">});</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>3.레이아웃 xml 파일에서 사이즈 설정의 오류 (이때  1번의 방법으로 억지로 해결은 가능하다)</p>
+</blockquote>
+
+<p>나는 2번을 먼저해보고 변화가 없어서 1번의 문제라고 생각을 했다.
+그래서 1번을 통해서 임시방편으로 해결을 하고 다시 3번을 통해 완벽하게 해결했다…..</p>
+
+<h4 id="activity_mainxml">activity_main.xml</h4>
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">&lt;?</span><span class="n">xml</span> <span class="n">version</span><span class="p">=</span><span class="s">"1.0"</span> <span class="n">encoding</span><span class="p">=</span><span class="s">"utf-8"</span><span class="p">?&gt;</span>
+<span class="p">&lt;</span><span class="n">androidx</span><span class="p">.</span><span class="n">constraintlayout</span><span class="p">.</span><span class="n">widget</span><span class="p">.</span><span class="nc">ConstraintLayout</span>
+        <span class="c1">// 생략..... </span>
+        <span class="p">&lt;</span><span class="n">com</span><span class="p">.</span><span class="n">google</span><span class="p">.</span><span class="n">android</span><span class="p">.</span><span class="n">material</span><span class="p">.</span><span class="n">tabs</span><span class="p">.</span><span class="nc">TabLayout</span>
+            <span class="n">android</span><span class="p">:</span><span class="n">id</span><span class="p">=</span><span class="s">"@+id/main_tablayout"</span>
+
+    <span class="p">&lt;</span><span class="n">androidx</span><span class="p">.</span><span class="n">viewpager</span><span class="p">.</span><span class="n">widget</span><span class="p">.</span><span class="nc">ViewPager</span>
+            <span class="n">android</span><span class="p">:</span><span class="n">id</span><span class="p">=</span><span class="s">"@+id/main_viewPager"</span>
+            <span class="n">android</span><span class="p">:</span><span class="n">layout_width</span><span class="p">=</span><span class="s">"match_parent"</span>
+            <span class="n">android</span><span class="p">:</span><span class="n">layout_height</span><span class="p">=</span><span class="s">"622dp"</span>    <span class="c1">// 높이를 강제로 할당</span>
+            <span class="n">app</span><span class="p">:</span><span class="n">layout_constraintEnd_toEndOf</span><span class="p">=</span><span class="s">"parent"</span>
+            <span class="n">app</span><span class="p">:</span><span class="n">layout_constraintStart_toStartOf</span><span class="p">=</span><span class="s">"parent"</span>
+            <span class="n">app</span><span class="p">:</span><span class="n">layout_constraintBottom_toBottomOf</span><span class="p">=</span><span class="s">"parent"</span><span class="p">/&gt;</span>
+
+<span class="p">&lt;/</span><span class="n">androidx</span><span class="p">.</span><span class="n">constraintlayout</span><span class="p">.</span><span class="n">widget</span><span class="p">.</span><span class="nc">ConstraintLayout</span><span class="p">&gt;</span>
+</code></pre></div></div>
+
+<p>초기 activity_main.xml 코드이다. viewPager의 높이를 강제로 622dp로 설정을 해버려서 위에 TabLayout을 침범해서 덮어버린 것이다.</p>
+
+<p>따라서 이 부분을 다음과 같이 해결했다.</p>
+
+<div class="language-kotlin highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">&lt;</span><span class="n">androidx</span><span class="p">.</span><span class="n">viewpager</span><span class="p">.</span><span class="n">widget</span><span class="p">.</span><span class="nc">ViewPager</span>
+            <span class="n">android</span><span class="p">:</span><span class="n">id</span><span class="p">=</span><span class="s">"@+id/main_viewPager"</span>
+            <span class="n">android</span><span class="p">:</span><span class="n">layout_width</span><span class="p">=</span><span class="s">"match_parent"</span>
+            <span class="n">android</span><span class="p">:</span><span class="n">layout_height</span><span class="p">=</span><span class="s">"0dp"</span> <span class="c1">// 높이를 0으로설정후</span>
+            <span class="n">app</span><span class="p">:</span><span class="n">layout_constraintTop_toBottomOf</span><span class="p">=</span><span class="s">"@id/main_tablayout"</span>    <span class="c1">// TabLayout밑을 시작점으로 설정</span>
+            <span class="n">app</span><span class="p">:</span><span class="n">layout_constraintRight_toRightOf</span><span class="p">=</span><span class="s">"parent"</span>
+            <span class="n">app</span><span class="p">:</span><span class="n">layout_constraintLeft_toLeftOf</span><span class="p">=</span><span class="s">"parent"</span>
+            <span class="n">app</span><span class="p">:</span><span class="n">layout_constraintBottom_toBottomOf</span><span class="p">=</span><span class="s">"parent"</span>
+            <span class="p">/&gt;</span>
+</code></pre></div></div>
+
+<p>이를 통해 높이를 강제로 할당한 경우에 에뮬레이터에서는 정상동작 하지만, 기기별로 높이가 다르기 때문에 제대로 동작되지 않는 기기도 있어서 안좋은 설정방법임을 깨달았다.</p>
+:ET
