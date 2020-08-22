@@ -10,8 +10,7 @@ optimized_image: null
 category: android
 tags: Android Kotlin
 author: null
-paginate: false
-published: true
+
 ---
 
 기상시간 앱을 만드는데 Tablayout으로 상단에 탭을 만들어서 사용하려했는데 이게 슬라이드로는 프레그먼트전환이 잘 일어나지만 버튼 클릭으로는 전환이 이루어지지 않아서 해결해 보았다.

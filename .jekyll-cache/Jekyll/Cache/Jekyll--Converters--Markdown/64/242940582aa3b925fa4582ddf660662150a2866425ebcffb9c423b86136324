@@ -1,4 +1,4 @@
-I"d<p>안드로이드 공부중에 자꾸 까먹는 에러가 있어서 기록하려고 한다.</p>
+I"�<p>안드로이드 공부중에 자꾸 까먹는 에러가 있어서 기록하려고 한다.</p>
 
 <p><img src="/assets/img/Android/1.JPG" alt="에러" /></p>
 
@@ -15,12 +15,13 @@
 <p>하지만 그래도 계속 에러가 발생해서 신뢰의 구글링을 해본결과…</p>
 
 <p><strong>에뮬레이터에있는 앱을 Uninstall한후 다시 실행해보라는 것이였다.</strong></p>
-<center>
- &gt;![에러](/assets/img/Android/2.JPG "LogoActivity")
- &gt;
- &gt; ---
- &gt;![에러](/assets/img/Android/3.JPG "LogoActivity")
-</center>
+
+<blockquote>
+  <p><img src="/assets/img/Android/2.JPG" alt="에러" title="LogoActivity" /></p>
+
+  <p><img src="/assets/img/Android/3.JPG" alt="에러" title="LogoActivity" /></p>
+</blockquote>
+
 <p>에뮬레이터에서 해당하는 앱을 선택하여 언인스톨 해준다</p>
 
 <p>그후 다시 실행을 하면 앱이 생성되면서 에러없이 돌아간다.</p>

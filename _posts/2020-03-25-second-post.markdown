@@ -1,19 +1,14 @@
 ---
-date: {}
+date: 2020-03-25T20:20:27.000+09:00
 layout: post
-title: >-
-  안드로이드 스튜디오 java.net.SocketException: socket failed: EPERM (Operation not
-  permitted) 에러 해결
+title: "안드로이드 스튜디오 java.net.SocketException: socket failed: EPERM (Operation not permitted) 에러 해결"
 subtitle: null
 description: null
-image: >-
-  https://res.cloudinary.com/dm7h7e8xj/image/upload/c_scale,w_380/v1559820489/js-code_n83m7a.jpg
-
+image: https://res.cloudinary.com/dm7h7e8xj/image/upload/c_scale,w_380/v1559820489/js-code_n83m7a.jpg  
 category: android
 tags: Android  Kotlin
 author: null
-paginate: false
-published: true
+
 ---
 
 안드로이드 공부중에 자꾸 까먹는 에러가 있어서 기록하려고 한다.
