@@ -8,8 +8,7 @@ image: https://res.cloudinary.com/dm7h7e8xj/image/upload/c_scale,w_380/v15598204
 optimized_image: 
 category: android
 tags: Android Kotlin
-author: 
-paginate: false
+
 ---
 
 
@@ -95,4 +94,4 @@ schemas.android.com  안드로이드 스키마
 <br/>
 
 
-> ### 참조 [https://developer.android.com/guide/topics/manifest/manifest-intro.html](https://developer.android.com/guide/topics/manifest/manifest-intro.html)
+> ### 참조 [<a href="https://developer.android.com/guide/topics/manifest/manifest-intro.html" target="_blank">https://developer.android.com/guide/topics/manifest/manifest-intro.html</a>]

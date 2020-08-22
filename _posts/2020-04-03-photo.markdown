@@ -84,6 +84,6 @@ receiveSocket = serverSocket.accept()
 
 <br/>
 
-#### 참조: <https://recipes4dev.tistory.com/153>
+#### 참조: <a href="https://recipes4dev.tistory.com/153" target="_blank">https://recipes4dev.tistory.com/153</a>
 
 

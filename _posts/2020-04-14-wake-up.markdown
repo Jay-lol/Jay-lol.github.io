@@ -8,11 +8,10 @@ image: https://res.cloudinary.com/dm7h7e8xj/image/upload/c_scale,w_380/v15598204
 optimized_image: 
 category: android
 tags: Android Kotlin
-author:
-paginate: false
+
 ---
 
-
+<center>
 ### 기상시간 추천 어플(1)
 
 어플을 만드는 목적은 다음과 같다.
@@ -24,7 +23,8 @@ paginate: false
 
 ![로딩](..\assets\img\Android\2020-04-14-23-01-36.png)
 
-우선  로딩화면을 띄워주고 시작을한다. 로고는 무료제작사이트에서 만들었다. <http://www.bizhows.com/cms/designcenter/logo_design/>
+우선  로딩화면을 띄워주고 시작을한다. 로고는 무료제작사이트에서 만들었다.
+<a href="http://www.bizhows.com/cms/designcenter/logo_design/" target="_blank">http://www.bizhows.com/cms/designcenter/logo_design/</a>
 
 ![페이지](..\assets\img\Android\2020-04-14-23-03-36.png)
 
@@ -32,4 +32,4 @@ paginate: false
 1.기상시간 추천
 2.알람 설정
 3.커뮤니티 기능
-
+</center>
