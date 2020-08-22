@@ -1,15 +1,20 @@
 ---
-date: 2020-03-25T20:20:27.000+09:00
+date: {}
 layout: post
-title: "안드로이드 스튜디오 java.net.SocketException: socket failed: EPERM (Operation not permitted) 에러 해결"
-subtitle:
-description: 
-image: https://res.cloudinary.com/dm7h7e8xj/image/upload/c_scale,w_380/v1559820489/js-code_n83m7a.jpg  
-optimized_image: https://res.cloudinary.com/dm7h7e8xj/image/upload/c_scale,w_380/v1559820489/js-code_n83m7a.jpg
+title: >-
+  안드로이드 스튜디오 java.net.SocketException: socket failed: EPERM (Operation not
+  permitted) 에러 해결
+subtitle: null
+description: null
+image: >-
+  https://res.cloudinary.com/dm7h7e8xj/image/upload/c_scale,w_380/v1559820489/js-code_n83m7a.jpg
+optimized_image: >-
+  https://res.cloudinary.com/dm7h7e8xj/image/upload/c_scale,w_380/v1559820489/js-code_n83m7a.jpg
 category: android
 tags: Android  Kotlin
-author: 
+author: null
 paginate: false
+published: true
 ---
 
 안드로이드 공부중에 자꾸 까먹는 에러가 있어서 기록하려고 한다.
@@ -30,12 +35,12 @@ paginate: false
 하지만 그래도 계속 에러가 발생해서 신뢰의 구글링을 해본결과...
 
 **에뮬레이터에있는 앱을 Uninstall한후 다시 실행해보라는 것이였다.**
-<center>
+
  >![에러]({{site.baseurl}}/assets/img/Android/2.JPG "LogoActivity")
  >
- > ---
+ > 
  >![에러]({{site.baseurl}}/assets/img/Android/3.JPG "LogoActivity")
-</center>
+
 에뮬레이터에서 해당하는 앱을 선택하여 언인스톨 해준다
 
 그후 다시 실행을 하면 앱이 생성되면서 에러없이 돌아간다.
