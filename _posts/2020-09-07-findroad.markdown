@@ -1,0 +1,114 @@
+---
+layout: post
+title: 길 찾기 게임
+date: '2020-09-07 12:30:00 +0900'
+description: null
+img: pglogo.jpg
+tags:
+  - Algorithm
+  - Programmers
+published: true
+---
+
+# [프로그래머스] 길 찾기 게임
+
+
+<a href="https://rumblefish.tistory.com/65" target="_blank">https://programmers.co.kr/learn/courses/30/lessons/42892</a>
+
+## 길 찾기 게임
+
+### 입출력
+![01]({{site.baseurl}}/assets/img/0907.PNG)
+
+### 트리모양
+ ![02]({{site.baseurl}}/assets/img/090701.PNG)
+
+입출력이 주어졌을 때, 해당 좌표를 통해서 이진트리를 만들고, 이를 전위,후위 순회한 결과를 출력하는 문제다.  
+힌트는 x좌표는 중복되는 값이 없다는 것이고, 이를 통해 x좌표를 이용해 이진트리를 만들 수 있을 것 같다고 생각했다.  
+x로 정렬하고, y는 내림차순으로 정렬을 해주면 이진트리 노드의 순서가 나온다.   
+이를 통해서 x값을 비교해가며 내가 만든 트리에 insert를 해주면 트리가 만들어지고, 이를 전위, 후위로 출력해주면 된다.  
+처음에는 재귀를  써서 구현하려 했는데, 프로그래머스에서 문제를 풀면서 재귀로 짜면 stackoverflow가 발생하는 케이스가 있어서 while문으로 짜봤다.   장점으로는 한번만 탐색으로 전위, 후위를 구할 수 있다.
+
+
+### 풀이
+
+ ```kotlin
+import java.util.*
+
+private val preorder = arrayListOf<Int>()       // 전위, 후위를 한번에 담으려고 전역으로 선언
+private val postorder = arrayListOf<Int>()
+data class NodeInfo(var x : Int, var y : Int, var v : Int)     // 좌표 데이터를 담을 데이터 클래스
+class Solution {    // 🤔🤢
+    fun solution(nodeinfo: Array<IntArray>): Array<IntArray> {
+        var num = 1
+        val list = nodeinfo.map { NodeInfo(it[0],it[1], num++) }
+                .sortedBy { it.x }.sortedByDescending { it.y }  // 매개변수를 NodeInfo형태로 바꾸고, 정렬
+        val tree = MyTree()
+        for (item in list) tree.insert(item.v, item.x)  // 트리에 넣고
+        tree.makeOrder()    // 탐색 시작
+        return arrayOf(preorder.toIntArray(), postorder.toIntArray())
+    }
+
+    class TreeNode(var value: Int, var x: Int) {
+        var left: TreeNode? = null
+        var right: TreeNode? = null
+    }
+
+    class MyTree {
+        var rootNode: TreeNode? = null
+
+        fun insert(n: Int, x: Int) {
+            var temp = rootNode
+            if (temp==null) {
+                rootNode=TreeNode(n,x)
+                return
+            }
+            while (true) {
+                if (x < temp!!.x) {
+                    if (temp.left != null) {
+                        temp = temp.left
+                    } else {
+                        temp.left = TreeNode(n, x)
+                        break
+                    }
+                } else {
+                    if (temp.right != null) {
+                        temp = temp.right
+                    } else {
+                        temp.right = TreeNode(n, x)
+                        break
+                    }
+                }
+            }
+        }
+
+        fun makeOrder() {
+            var temp = rootNode
+            val arr = BooleanArray(100001) { false }
+            val st = Stack<TreeNode>()
+            st.push(rootNode)
+            preorder.add(temp!!.value)
+            while (st.isNotEmpty()) {
+                temp = st.peek()
+                // 한번도 방문 안했던 노드는 왼쪽 탐색
+                if (!arr[temp.value] && temp.left != null) {
+                    preorder.add(temp.left!!.value)
+                    st.push(temp.left)
+                }
+                // 한번 방문했던 노드는 오른쪽 탐색
+                if (arr[temp.value] && temp.right != null && !arr[temp.right!!.value]) {
+                    preorder.add(temp.right!!.value)
+                    st.push(temp.right)
+                }
+                // 오른쪽,왼쪽노드가 널이거나 방문한 경우
+                if ((temp.left == null || arr[temp.left!!.value])
+                        && (temp.right == null || arr[temp.right!!.value])) {
+                    postorder.add(temp.value)
+                    st.pop()
+                }
+                arr[temp.value] = true
+            }
+        }
+    }
+}
+ ```
