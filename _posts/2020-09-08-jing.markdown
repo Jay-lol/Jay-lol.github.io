@@ -1,0 +1,105 @@
+---
+layout: post
+title: 징검다리 건너기
+date: '2020-09-08 12:30:00 +0900'
+description: null
+img: pglogo2.jpg
+tags:
+  - Algorithm
+  - Programmers
+---
+
+# [프로그래머스] 징검다리 건너기
+
+
+<a href="https://programmers.co.kr/learn/courses/30/lessons/64062" target="_blank">https://programmers.co.kr/learn/courses/30/lessons/64062</a>
+
+## 징검다리 건너기
+
+### 입출력및 제한사항
+![01]({{site.baseurl}}/assets/img/090802.PNG)
+
+
+![01]({{site.baseurl}}/assets/img/090801.PNG)
+
+### 입출력 예에 대한 설명
+입출력 예 #1
+
+첫 번째 친구는 다음과 같이 징검다리를 건널 수 있습니다.  
+![01]({{site.baseurl}}/assets/img/step_stones_104.png)
+
+
+첫 번째 친구가 징검다리를 건넌 후 디딤돌에 적힌 숫자는 아래 그림과 같습니다.  
+
+
+두 번째 친구도 아래 그림과 같이 징검다리를 건널 수 있습니다.  
+
+![01]({{site.baseurl}}/assets/img/step_stones_101.png)  
+두 번째 친구가 징검다리를 건넌 후 디딤돌에 적힌 숫자는 아래 그림과 같습니다.  
+
+
+세 번째 친구도 아래 그림과 같이 징검다리를 건널 수 있습니다.  
+![01]({{site.baseurl}}/assets/img/step_stones_102.png)
+
+세 번째 친구가 징검다리를 건넌 후 디딤돌에 적힌 숫자는 아래 그림과 같습니다.
+
+
+네 번째 친구가 징검다리를 건너려면, 세 번째 디딤돌에서 일곱 번째 디딤돌로 네 칸을 건너뛰어야 합니다. 하지만 k = 3 이므로 건너뛸 수 없습니다.
+![01]({{site.baseurl}}/assets/img/step_stones_103.png)
+
+따라서 최대 3명이 디딤돌을 모두 건널 수 있습니다.
+
+### 풀이
+
+제한사항을 보고 일반적인 완전탐색으로는 풀 수 없을거라고 생각을 했다.  
+왜냐하면 stone배열 원소의 최대값이 2억이고, 배열길이는 20만이기 때문에 최악의 경우 k가 20만이고 원소값이 2억인 돌이 20만개가 있어서 1명일때, 2명일때...n명일때 각각 길이가 20만인 배열을 돌면서 2억번씩 세줘야 하기 때문이다.  
+그러면 40,000,000,000,000번 연산을 해야한다..(2억*20만)   
+그래서 파라매트릭 서치(Parametric Search), 이분탐색을 활용하여 문제를 풀어야한다. 그러면 O(20만 * (log2억)).  
+타겟은 <b>n명이 최대k만큼 돌을 뛰어넘어서 모두 건널 수 있나??</b>  
+이분탐색시 right의 최대값은 stone배열의 최대값이다..최대값을 넘어서까지 사람이 건너갈 수 없다.  
+그리고 배열원소에서 건너가는 인원만큼 빼주고, 0이하면 그냥 0으로 둔다.   
+그 다음 배열을 앞에서 부터 세주면서 연속으로 나온 0의 개수가 k와 같으면 바로 탐색을 종료하고 나온다. 어차피 더 탐색해봤자 k보다 크거나 같기 때문이다.  (0의 연속된 개수가 k보다 같으면 못 건너는거다. 1,0,0,0 있고 k=3이면 못건넌다. 4여야 건널 수 있음)  
+그리고 연속으로 나온 0의 개수가 k와 같으면 왼쪽, 아니면 오른쪽을 answer 갱신 후 탐색한다.  
+갱신을 먼저 하는 이유는, 만약 답이 2이고, 이미 2를 탐색했지만 최대값을 찾기위해서 오른쪽을 더 탐색하게되고 다음 과 같은 순서로 탐색을 한다. 
+left가 3 right가 10  
+left가 3 right가 5  
+left가 3 right가 3  
+그리고 right는 2가되는데 그러면 while문이 끝나게 된다. 그러므로 그전에 미리 갱신해서 2+1값을 가진다.
+
+헷갈렸던 부분)  
+k가 3일때  
+어떤 배열에서 2를 뺏을때 3,0,0,2 이고 (연속된 0의수 2 < k)이므로 답의 후보가 될 수 있는데 이때의 건널 수 있는 인원은, 2라서 2명이 아니라 3명까지 건널 수 있다. +1을 해줘야한다.
+2를 뺏다는건 3명이 건넌다는 의미...
+아직도 좀 헷갈린다.
+
+
+### 코드
+```kotlin
+class Solution {    // 😁😊
+    fun solution(stones: IntArray, k: Int): Int {
+        var answer = 0
+        var (right, left) = stones.max()!! to 0
+        var mid : Int
+        while (left<=right) {
+            mid = (right + left) / 2
+            val temp = stones.map { if(it - mid<0) 0 else it - mid }.toMutableList()
+            var cnt = 0
+            
+            for ((index, i) in temp.withIndex()) {
+                if (i == 0) cnt++
+                else cnt = 0
+                if (cnt==k) break
+            }
+
+            if (cnt == k) {
+                right = mid - 1
+                answer = (right+left)/2+1
+            } else {
+                left = mid + 1
+                answer = (right+left)/2+1
+            }
+        }
+        return answer
+    }
+}
+```

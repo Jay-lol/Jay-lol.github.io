@@ -3,7 +3,7 @@ layout: post
 title: 길 찾기 게임
 date: '2020-09-07 12:30:00 +0900'
 description: null
-img: pglogo.jpg
+img: pglogo2.jpg
 tags:
   - Algorithm
   - Programmers
@@ -13,7 +13,7 @@ published: true
 # [프로그래머스] 길 찾기 게임
 
 
-<a href="https://rumblefish.tistory.com/65" target="_blank">https://programmers.co.kr/learn/courses/30/lessons/42892</a>
+<a href="https://programmers.co.kr/learn/courses/30/lessons/42892" target="_blank">https://programmers.co.kr/learn/courses/30/lessons/42892</a>
 
 ## 길 찾기 게임
 
@@ -23,6 +23,8 @@ published: true
 ### 트리모양
  ![02]({{site.baseurl}}/assets/img/090701.PNG)
 
+### 풀이
+
 입출력이 주어졌을 때, 해당 좌표를 통해서 이진트리를 만들고, 이를 전위,후위 순회한 결과를 출력하는 문제다.  
 힌트는 x좌표는 중복되는 값이 없다는 것이고, 이를 통해 x좌표를 이용해 이진트리를 만들 수 있을 것 같다고 생각했다.  
 x로 정렬하고, y는 내림차순으로 정렬을 해주면 이진트리 노드의 순서가 나온다.   
@@ -30,7 +32,7 @@ x로 정렬하고, y는 내림차순으로 정렬을 해주면 이진트리 노�
 처음에는 재귀를  써서 구현하려 했는데, 프로그래머스에서 문제를 풀면서 재귀로 짜면 stackoverflow가 발생하는 케이스가 있어서 while문으로 짜봤다.   장점으로는 한번만 탐색으로 전위, 후위를 구할 수 있다.
 
 
-### 풀이
+### 코드
 
  ```kotlin
 import java.util.*
