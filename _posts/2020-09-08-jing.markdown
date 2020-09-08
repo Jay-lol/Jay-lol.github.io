@@ -3,7 +3,7 @@ layout: post
 title: 징검다리 건너기
 date: '2020-09-08 12:30:00 +0900'
 description: null
-img: pglogo2.jpg
+img: git.png
 tags:
   - Algorithm
   - Programmers
