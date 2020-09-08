@@ -3,7 +3,7 @@ layout: post
 title: 길 찾기 게임
 date: '2020-09-07 12:30:00 +0900'
 description: null
-img: pglogo2.jpg
+img: pglogo.jpg
 tags:
   - Algorithm
   - Programmers
