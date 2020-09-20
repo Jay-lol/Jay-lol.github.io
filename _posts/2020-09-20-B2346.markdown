@@ -1,0 +1,81 @@
+---
+layout: post
+title: 풍선 터뜨리기
+date: '2020-09-20 13:30:00 +0900'
+description: null
+img: bglogo.png
+tags:
+  - Algorithm
+---
+
+# [백준] 풍선 터뜨리기 -Kotlin풀이
+
+<a href="https://www.acmicpc.net/problem/2346" target="_blank">https://www.acmicpc.net/problem/2346</a>
+
+## 풍선 터뜨리기
+
+### 문제 설명
+
+N개의 풍선이 있다. 각 풍선 안에는 -N부터 N까지의 수가 적혀있는 종이가 들어 있다. 이 풍선들을 다음과 같은 규칙으로 터뜨린다.
+
+우선, 제일 처음에는 1번 풍선을 터뜨린다. 다음에는 풍선 안에 있는 종이를 꺼내어 그 종이에 적혀있는 값만큼 이동하여 다음 풍선을 터뜨린다. 양수가 적혀 있을 경우에는 오른쪽으로, 음수가 적혀 있을 때는 왼쪽으로 이동한다. 풍선은 원형으로 놓여 있다고 생각한다. 즉, 1번 풍선의 왼쪽에 N번 풍선이 있고, N번 풍선의 오른쪽에 1번 풍선이 있는 것이다. 이동할 때에는 이미 터진 풍선은 빼고 생각한다.
+
+예를 들어 다섯 개의 풍선 안에 차례로 3, 2, 1, -3, -1이 적혀 있었다고 하자. 이 경우 3이 적혀 있는 1번 풍선, -3이 적혀 있는 4번 풍선, -1이 적혀 있는 5번 풍선, 1이 적혀 있는 3번 풍선, 2가 적혀 있는 2번 풍선의 순서대로 터지게 된다.
+
+
+### 입력
+첫째 줄에 자연수 N(1≤N≤1,000)이 주어진다. 다음 줄에는 차례로 각 풍선 안의 종이에 적혀 있는 수가 주어진다.  
+편의상 0은 적혀있지 않다고 가정하자.
+
+### 출력
+
+첫째 줄에 터진 풍선의 번호를 차례로 나열한다.
+
+### 입출력예  
+![01]({{site.baseurl}}/assets/img/092002.PNG)
+![01]({{site.baseurl}}/assets/img/092003.PNG)
+
+### 풀이
+풀이는 간단하게 덱큐로 풀 수 있는 문제였다. 그런데 포스트를 하는 이유는 계속 메모리초과가 나서 시간을 태웠기 때문이다.  
+
+나는 지금까지 Queue를 사용할때 LinkedList를 이용했는데 이중연결리스트라 메모리를 많이 잡아 먹는 단점이 있었다.  
+큐는 기본적으로 FIFO 성격을 띄기때문에, 단순하게 앞뒤 연산만 하는 문제에서 큐 사용시 어레이덱큐를 사용해야 한다는 것을 알게 되었다.  
+<a href="http://javaqueue2010.blogspot.com" target="_blank">ArrayDeque와 LinkedList보다 좋은점</a>을 보면 ArrayDeque의 장점은 다음과 같다.
+
+1. ArrayDeque 는 배열에 의해 지원되고 배열은 LinkedList보다 더 cache-locality에 친화적이다.  
+ 
+2. ArrayDeque는  LinkedList와 다르게 다음 노드로의 추가적 참조가 필요하지 않으므로 메모리가 효율적이다.  
+
+ <a href="https://qastack.kr/programming/6163166/why-is-arraydeque-better-than-linkedlist" target="_blank">ArrayDeque와 LinkedList의 차이점</a>  
+앞으로는 ArrayDeque와 LinkedList()를 구별해서 활용해야겠다.
+
+### 코드
+```kotlin
+import java.util.ArrayDeque
+import kotlin.math.abs
+
+fun main() {    // 😁😀
+    data class Pos(var x : Int, var n : Int)
+    val br = System.`in`.bufferedReader()
+    val bw = System.out.bufferedWriter()
+    val dq = ArrayDeque<Pos>()
+    // 처음엔 val dq :Deque<Pos> = LinkedList()로 구현
+    var n : Int
+    br.readLine()
+    br.readLine().split(" ").map { it.toInt() }.forEachIndexed { i, c -> dq.addFirst(Pos(c, i+1))}
+    while (dq.isNotEmpty()) {
+        bw.write("${dq.last().n} ")
+        n = dq.last().x
+        dq.removeLast()
+        if (dq.isEmpty())
+            break
+        if (n > 0) {
+            for (i in 0 until n-1) dq.addFirst(dq.removeLast())
+        } else {
+            for (i in 0 until abs(n)) dq.addLast(dq.removeFirst())
+        }
+    }
+    bw.close()
+    br.close()
+}
+```
