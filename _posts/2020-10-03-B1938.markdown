@@ -75,6 +75,10 @@ BFS탐색 문제를 풀 때 중요한 것이 어떤 데이터를 가지고 탐�
 
 ![06]({{site.baseurl}}/assets/img/100306.PNG)
 시뮬레이션 문제 답게 뇌가 말랑말랑해지는 문제 였던거 같다..  
+풀고 보니까 코틀린으로는 딱 한분만 이 문제를 풀어놓으셨다.  
+ 코드 길이가 2배정도 짧아서 코드 구경을 하고 set의 활용 그리고 범위를 체크하는 스킬?을 알게 되었다.   
+ <a href="https://www.acmicpc.net/problem/status/1938/69/1" target="_blank">tn*****21</a>님의 코드를 참고한 코드는 맨 밑  "펼치기"에 있다.  
+ 시간은 조금 더 걸리지만 가독성면에서 훨씬 좋다!! 답을 원하시는 분들은 그 코드를 보면 더 좋을거 같다.
 
 
 ### 코드
@@ -94,7 +98,7 @@ fun main() {    // 😁😊
     val dq = ArrayDeque<Position>()
     val g = arrayListOf<Pair<Int, Int>>()
     val s = arrayListOf<Pair<Int, Int>>()
-    var check = false
+
     for (i in 0 until n) {  // 위치 파악
         val x = br.readLine()
         for (j in 0 until n) {
@@ -188,3 +192,79 @@ fun main() {    // 😁😊
     br.close()
 }
 ```
+<br>
+<details>
+<summary>펼치기/접기 버튼</summary>
+<div markdown="1">
+
+```kotlin
+import java.util.ArrayDeque
+
+fun main() {    // 😁😊
+    data class Position(var x: Int, var y: Int, var cnt: Int, var garo: Int)    //0가로,1세로
+
+    val br = System.`in`.bufferedReader()
+    val bw = System.out.bufferedWriter()
+    val n = br.readLine().toInt()
+    val arr = Array(n) { br.readLine() }
+    val visited = List(2) { Array(n) { BooleanArray(n) } }  // *[가로세로][x][y]로 구현
+    val dq = ArrayDeque<Position>()
+    var start = Position(0, 0, 0, 0)
+    var goal = Position(0, 0, 0, 0)
+    var find = false
+
+    for (i in 0 until n) {  // *setOf로 가로 세로를 판별
+        for (j in 0 until n) {
+            if (j in 1 until n - 1 && setOf(arr[i][j - 1], arr[i][j], arr[i][j + 1]) == setOf('B'))
+                start = Position(i, j, 0, 0)
+            if (i in 1 until n - 1 && setOf(arr[i - 1][j], arr[i][j], arr[i + 1][j]) == setOf('B'))
+                start = Position(i, j, 0, 1)
+            if (j in 1 until n - 1 && setOf(arr[i][j - 1], arr[i][j], arr[i][j + 1]) == setOf('E'))
+                goal = Position(i, j, 0, 0)
+            if (i in 1 until n - 1 && setOf(arr[i - 1][j], arr[i][j], arr[i + 1][j]) == setOf('E'))
+                goal = Position(i, j, 0, 1)
+        }
+    }
+
+    fun moveCheck(xr: IntRange, yr: IntRange) = //*IntRange를 매개변수로 활용하여 이동가능한지 판단
+            xr.all { x -> yr.all { y -> x in 0 until n && y in 0 until n && arr[x][y] != '1' } }
+
+    fun doNext(x: Int, y: Int, cnt: Int, garo: Int, xRange: IntRange, yRange: IntRange) {
+        if (moveCheck(xRange, yRange) && !visited[garo][x][y]) {    // *3차원배열로 탐색 가능 여부 판단
+            if (goal.x == x && goal.y == y && goal.garo == garo) {
+                bw.write("$cnt")
+                find = true
+            }
+            visited[garo][x][y] = true
+            dq.addLast(Position(x, y, cnt, garo))
+        }
+    }
+
+    visited[start.garo][start.x][start.y] = true
+    dq.addLast(start)
+
+    while (dq.isNotEmpty()) {
+        val v = dq.removeFirst()
+        if (v.garo == 0) {  // 가로 세로를 나눠서 중심좌표를 넘기고, 1이 있는지 없는지를 판단할 x,y의 범위를 넘겨준다.
+            doNext(v.x - 1, v.y, v.cnt + 1, 0, v.x - 1..v.x - 1, v.y - 1..v.y + 1)
+            doNext(v.x + 1, v.y, v.cnt + 1, 0, v.x + 1..v.x + 1, v.y - 1..v.y + 1)
+            doNext(v.x, v.y - 1, v.cnt + 1, 0, v.x..v.x, v.y - 2..v.y - 2)
+            doNext(v.x, v.y + 1, v.cnt + 1, 0, v.x..v.x, v.y + 2..v.y + 2)
+            doNext(v.x, v.y, v.cnt + 1, 1, v.x - 1..v.x + 1, v.y - 1..v.y + 1)
+        } else {
+            doNext(v.x - 1, v.y, v.cnt + 1, 1, v.x - 2..v.x - 2, v.y..v.y)
+            doNext(v.x + 1, v.y, v.cnt + 1, 1, v.x + 2..v.x + 2, v.y..v.y)
+            doNext(v.x, v.y - 1, v.cnt + 1, 1, v.x - 1..v.x + 1, v.y - 1..v.y - 1)
+            doNext(v.x, v.y + 1, v.cnt + 1, 1, v.x - 1..v.x + 1, v.y + 1..v.y + 1)
+            doNext(v.x, v.y, v.cnt + 1, 0, v.x - 1..v.x + 1, v.y - 1..v.y + 1)
+        }
+        if (find) break
+    }
+    if (!find) bw.write("0")
+    bw.close()
+    br.close()
+}
+```
+</div>
+</details>
+<br>
