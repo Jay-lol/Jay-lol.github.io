@@ -1,0 +1,127 @@
+---
+layout: post
+title: 로봇
+date: '2020-10-04 13:30:00 +0900'
+description: null
+img: bglogo.png
+tags:
+  - Algorithm
+---
+
+# [백준 1726번] 로봇 -Kotlin풀이
+
+<a href="https://www.acmicpc.net/problem/1726" target="_blank">https://www.acmicpc.net/problem/1726</a>
+
+## 로봇
+
+### 문제 설명
+![01]({{site.baseurl}}/assets/img/100401.PNG)  
+  
+ 많은 공장에서 로봇이 이용되고 있다. 우리 월드 공장의 로봇은 바라보는 방향으로 궤도를 따라 움직이며, 움직이는 방향은 동, 서, 남, 북 가운데 하나이다. 로봇의 이동을 제어하는 명령어는 다음과 같이 두 가지이다.
+
+ * 명령 1. Go k: k는 1, 2 또는 3일 수 있다. 현재 향하고 있는 방향으로 k칸 만큼 움직인다.
+ * 명령 2. Turn dir: dir은 left 또는 right 이며, 각각 왼쪽 또는 오른쪽으로 90° 회전한다.  
+  
+  공장 내 궤도가 설치되어 있는 상태가 아래와 같이 0과 1로 이루어진 직사각형 모양으로 로봇에게 입력된다.   
+  0은 궤도가 깔려 있어 로봇이 갈 수 있는 지점이고, 1은 궤도가 없어 로봇이 갈 수 없는 지점이다.   
+  로봇이 (4, 2) 지점에서 남쪽을 향하고 있을 때,  이 로봇을 (2, 4) 지점에서 동쪽으로 향하도록 이동시키는 것은 아래와 같이 9번의 명령으로 가능하다.
+
+![01]({{site.baseurl}}/assets/img/100402.PNG)
+
+로봇의 현재 위치와 바라보는 방향이 주어졌을 때, 로봇을 원하는 위치로 이동시키고, 원하는 방향으로 바라보도록 하는데 최소 몇 번의 명령이 필요한지 구하는 프로그램을 작성하시오.
+
+### 입력
+첫째 줄에 공장 내 궤도 설치 상태를 나타내는 직사각형의 세로 길이 M과 가로 길이 N이 빈칸을 사이에 두고 주어진다. 이때 M과 N은 둘 다 100이하의 자연수이다. 이어 M줄에 걸쳐 한 줄에 N개씩 각 지점의 궤도 설치 상태를 나타내는 숫자 0 또는 1이 빈칸을 사이에 두고 주어진다. 다음 줄에는 로봇의 출발 지점의 위치 (행과 열의 번호)와 바라보는 방향이 빈칸을 사이에 두고 주어진다. 마지막 줄에는 로봇의 도착 지점의 위치 (행과 열의 번호)와 바라보는 방향이 빈칸을 사이에 두고 주어진다. 방향은 동쪽이 1, 서쪽이 2, 남쪽이 3, 북쪽이 4로 주어진다. 출발지점에서 도착지점까지는 항상 이동이 가능하다.
+
+### 출력
+
+첫째 줄에 로봇을 도착 지점에 원하는 방향으로 이동시키는데 필요한 최소 명령 횟수를 출력한다.
+
+### 입출력예  
+![04]({{site.baseurl}}/assets/img/100403.PNG)
+![05]({{site.baseurl}}/assets/img/100404.PNG)
+
+### 풀이
+골드4 난이도 문제로 통나무 옮기기와 마찬가지로 BFS, 시뮬레이션 문제다.  
+Pos 클래스에 좌표,방향, 움직인 횟수를 저장해가며 탐색했다.  
+3차원 리스트를 활용하여 visited[방향][x][y] 로 탐색 여부를 판단해 주었다.  
+그리고 IntRange와 IntProgression를 활용하여 moveCheck함수를 만들었다.  
+IntProgression은 (-1 downTo -3)를 매개변수로 넘겨주려고 사용했다.   
+다음 주의사항만 잘 따른다면 큰 어려움은 없을 것이다.
+
+
+
+ 1. 좌표가 같더라도 방향이 다르다면 탐색할 수 있다.  
+ 2. 직진을 할 때 두 번째 칸에 1이있다면 한칸만 갈 수 있다.  세 번째칸이 0 이여도 3칸은 못간다. 
+
+![05]({{site.baseurl}}/assets/img/100405.PNG)  
+  
+
+
+처음에는 y의 범위 체크를 m으로 해주어야하는데 n으로 해서 틀렸고,  
+두 번째는 시작지점이 목표지점이랑 같은 경우를 처리 안해줘서 틀렸었다.
+
+### 코드
+```kotlin
+import java.util.ArrayDeque
+fun main() {    // 😁😊
+    data class Pos(var x: Int, var y: Int, var dir: Int, var cnt: Int)
+    val br = System.`in`.bufferedReader()
+    val (n, m) = br.readLine().split(" ").map { it.toInt() }
+    val arr = List(n) { br.readLine().split(" ").map { it[0] }.toCharArray() }
+    val visited = List(4) { List(n) { BooleanArray(m) } }
+    val dq = ArrayDeque<Pos>()
+    val (start, goal) = run {
+        val (x, y, dir) = br.readLine().split(" ").map { it.toInt() - 1 }
+        val (xx, yy, ddir) = br.readLine().split(" ").map { it.toInt() - 1 }
+        if (x==xx && y==yy && dir == ddir) { print("0") ; return }
+        Pos(x, y, dir, 0) to Pos(xx, yy, ddir, 0)
+    }
+
+    // 목표지점에 도착했는지 체크
+    fun goalCheck(v: Pos): Boolean {
+        if (goal.x == v.x && goal.y == v.y && goal.dir == v.dir) {
+            print("${v.cnt+1}")
+            return true
+        }
+        return false
+    }
+
+    // 움직일 수 있는지 체크 후 큐에 푸쉬
+    fun moveCheck(v: Pos, xr: IntProgression, yr: IntProgression, tr: IntRange): Boolean {
+        val (x, y, dir, cnt) = v
+        var block = false
+        for (i in xr)
+            for (j in yr)  // 상하좌우 이동
+                if (block || x + i !in 0 until n || y + j !in 0 until m) continue
+                else if (arr[x + i][y + j] == '1') { block = true; continue }
+                else if (!visited[dir][x + i][y + j]) {
+                    if (goalCheck(Pos(x + i, y + j, dir, cnt))) return true
+                    visited[dir][x + i][y + j] = true
+                    dq.addLast(Pos(x + i, y + j, dir, cnt + 1))
+                }
+        for (i in tr) { // 회전
+            if (!visited[i][x][y]) {
+                if (goalCheck(Pos(x, y, i, cnt))) return true
+                visited[i][x][y] = true
+                dq.addLast(Pos(x, y, i, cnt + 1))
+            }
+        }
+        return false
+    }
+
+    // 시작지점부터 탐색 시작
+    dq.addLast(start)
+    visited[start.dir][start.x][start.y] = true
+    while (dq.isNotEmpty()) {
+        val v = dq.removeFirst()
+        when (v.dir) {    // 상하좌우 순
+            3 -> if (moveCheck(v, -1 downTo -3, 0..0, 0..1)) return
+            2 -> if (moveCheck(v, 1..3, 0..0, 0..1)) return
+            1 -> if (moveCheck(v, 0..0, -1 downTo -3, 2..3)) return
+            0 -> if (moveCheck(v, 0..0, 1..3, 2..3)) return
+        }
+    }
+    br.close()
+}
+```
