@@ -51,11 +51,11 @@ android {
 ```
 binding클래스를 생성할때 무시하고 싶은 레이아웃은 `tools:viewBindingIgnore="true"`을 추가해준다.
 ``` kotlin
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
             ...
             tools:viewBindingIgnore="true" >
         ...
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 ```
 <br/>
 
